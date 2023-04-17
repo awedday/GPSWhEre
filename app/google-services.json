@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "700885884509",
+    "project_id": "gpswheretest",
+    "storage_bucket": "gpswheretest.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:700885884509:android:77e7557f190b7f2a9477b4",
+        "android_client_info": {
+          "package_name": "com.example.gpswhere"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "700885884509-eemuvts5m0jnv1vcr6t9kclv04ibe0sl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCoJEOwV4L26wlt4CFR6f97QQhCjYjHok"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "700885884509-eemuvts5m0jnv1vcr6t9kclv04ibe0sl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

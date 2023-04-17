@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_joinCircle"
+        android:title="join Circle"/>
+    <item
+        android:id="@+id/nav_myCircle"
+        android:title="myCircle"/>
+
+    <item
+        android:id="@+id/nav_joinedCircle"
+        android:title="joinedCircle"/>
+
+    <item
+        android:id="@+id/nav_inviteMembers"
+        android:title="invite Members"/>
+
+    <item
+        android:id="@+id/nav_shareLoc"
+        android:title="ishare Location"/>
+
+    <item
+        android:id="@+id/nav_signOut"
+        android:title="Sign Out"/>
+</menu>
