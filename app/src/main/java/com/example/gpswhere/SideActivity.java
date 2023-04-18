@@ -5,6 +5,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -33,8 +34,10 @@ import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.layers.GeoObjectTapEvent;
 import com.yandex.mapkit.layers.GeoObjectTapListener;
+import com.yandex.mapkit.location.FilteringMode;
 import com.yandex.mapkit.location.Location;
 import com.yandex.mapkit.location.LocationListener;
+import com.yandex.mapkit.location.LocationManager;
 import com.yandex.mapkit.location.LocationStatus;
 import com.yandex.mapkit.map.CameraPosition;
 import com.yandex.mapkit.mapview.MapView;
@@ -49,8 +52,20 @@ public class SideActivity extends AppCompatActivity {
     Toolbar toolbar;
     FirebaseAuth auth;
     FirebaseUser user;
+
     private MapKit mapKit;
     MapView mapView;
+    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final double DESIRED_ACCURACY = 0;
+    private static final long MINIMAL_TIME = 1000;
+    private static final double MINIMAL_DISTANCE = 1;
+    private static final boolean USE_IN_BACKGROUND = false;
+    public static final int COMFORTABLE_ZOOM_LEVEL = 18;
+
+
+    private LocationManager locationManager;
+    private LocationListener myLocationListener;
+    private Point myLocation;
 
     DatabaseReference databaseReference;
 
@@ -62,11 +77,11 @@ public class SideActivity extends AppCompatActivity {
     CircleImageView imageViewImage;
 
 
-    private static final String API_KEY = "86b62060-f681-42c8-bbf8-7010ad40d4a6";
+    private static final String MAPKIT_API_KEY = "86b62060-f681-42c8-bbf8-7010ad40d4a6";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MapKitFactory.setApiKey(API_KEY);
+        MapKitFactory.setApiKey(MAPKIT_API_KEY);
         MapKitFactory.initialize(this);
         setContentView(R.layout.activity_side);
 
@@ -82,18 +97,29 @@ public class SideActivity extends AppCompatActivity {
         textViewName = header.findViewById(R.id.textViewName);
         textViewCode = header.findViewById(R.id.textViewCode);
         imageViewImage = header.findViewById(R.id.imageViewPhoto);
-        mapView.getMap().move(
-                new CameraPosition(new Point(55.664827, 37.597756), 11.0f, 0.0f, 0.0f),
-                new Animation(Animation.Type.SMOOTH, 2),
-                null);
-
-        mapView.getMap().addTapListener(new GeoObjectTapListener() {
+        locationManager = MapKitFactory.getInstance().createLocationManager();
+        myLocationListener = new LocationListener() {
             @Override
-            public boolean onObjectTap(@NonNull GeoObjectTapEvent geoObjectTapEvent) {
-                Log.d("Main",geoObjectTapEvent.getGeoObject().getName());
-                return false;
+            public void onLocationUpdated(Location location) {
+                if (myLocation == null) {
+                    moveCamera(location.getPosition(), COMFORTABLE_ZOOM_LEVEL);
+                }
+                myLocation = location.getPosition(); //this user point
+                Log.w(TAG, "my location - " + myLocation.getLatitude() + "," + myLocation.getLongitude());
+                FirebaseDatabase.getInstance().getReference("Users")
+                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("lng").setValue(myLocation.getLongitude());
+                FirebaseDatabase.getInstance().getReference("Users")
+                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("lat").setValue(myLocation.getLatitude());
+
             }
-        });
+
+            @Override
+            public void onLocationStatusUpdated(LocationStatus locationStatus) {
+                if (locationStatus == LocationStatus.NOT_AVAILABLE) {
+                    System.out.println("sdncvoadsjv");
+                }
+            }
+        };
 
         setSupportActionBar(toolbar);
 
@@ -135,21 +161,21 @@ public class SideActivity extends AppCompatActivity {
                 }
                 else if (id == R.id.nav_shareLoc)
                 {
-                    mapKit.createLocationManager().requestSingleUpdate(new LocationListener() {
-                        @Override
-                        public void onLocationUpdated(@NonNull Location location) {
-                            mapView.getMap().move(
-                                    new CameraPosition(location.getPosition(), 18.0f, 0.0f, 0.0f),
-                                    new Animation(Animation.Type.SMOOTH, 2),
-                                    null);
-                            mapView.getMap().getMapObjects().addPlacemark(location.getPosition());
-
-                        }
-
-                        @Override
-                        public void onLocationStatusUpdated(@NonNull LocationStatus locationStatus) {
-                        }
-                    });
+//                    mapKit.createLocationManager().requestSingleUpdate(new LocationListener() {
+//                        @Override
+//                        public void onLocationUpdated(@NonNull Location location) {
+//                            mapView.getMap().move(
+//                                    new CameraPosition(location.getPosition(), 18.0f, 0.0f, 0.0f),
+//                                    new Animation(Animation.Type.SMOOTH, 2),
+//                                    null);
+//                            mapView.getMap().getMapObjects().addPlacemark(location.getPosition());
+//
+//                        }
+//
+//                        @Override
+//                        public void onLocationStatusUpdated(@NonNull LocationStatus locationStatus) {
+//                        }
+//                    });
 
                 }
                 else if (id == R.id.nav_myCircle)
@@ -188,7 +214,16 @@ public class SideActivity extends AppCompatActivity {
     protected void onStop() {
         mapView.onStop();
         MapKitFactory.getInstance().onStop();
+        locationManager.unsubscribe(myLocationListener);
         super.onStop();
+    }
+
+    public void onFabCurrentLocationClick(View view) {
+        if (myLocation == null) {
+            return;
+        }
+
+        moveCamera(myLocation, COMFORTABLE_ZOOM_LEVEL);
     }
 
     @Override
@@ -196,7 +231,23 @@ public class SideActivity extends AppCompatActivity {
         super.onStart();
         MapKitFactory.getInstance().onStart();
         mapView.onStart();
+
+        subscribeToLocationUpdate();
     }
+
+    private void subscribeToLocationUpdate() {
+        if (locationManager != null && myLocationListener != null) {
+            locationManager.subscribeForLocationUpdates(DESIRED_ACCURACY, MINIMAL_TIME, MINIMAL_DISTANCE, USE_IN_BACKGROUND, FilteringMode.OFF, myLocationListener);
+        }
+    }
+
+    private void moveCamera(Point point, float zoom) {
+        mapView.getMap().move(
+                new CameraPosition(point, zoom, 0.0f, 0.0f),
+                new Animation(Animation.Type.SMOOTH, 1),
+                null);
+    }
+
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {

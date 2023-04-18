@@ -6,12 +6,12 @@ public class User {
     private String email;
     private String imageUrl;
     private Boolean issharding;
-    private Float lat;
-    private Float lng;
+    private String lat;
+    private String lng;
     private String name;
     private String password;
 
-    public User(String code, String email, String imageUrl, Boolean issharding, Float lat, Float lng, String name, String password) {
+    public User(String code, String email, String imageUrl, Boolean issharding, String lat, String lng, String name, String password) {
         this.code = code;
         this.email = email;
         this.imageUrl = imageUrl;
@@ -57,19 +57,19 @@ public class User {
         this.issharding = issharding;
     }
 
-    public Float getLat() {
+    public String getLat() {
         return lat;
     }
 
-    public void setLat(Float lat) {
+    public void setLat(String lat) {
         this.lat = lat;
     }
 
-    public Float getLng() {
+    public String getLng() {
         return lng;
     }
 
-    public void setLng(Float lng) {
+    public void setLng(String lng) {
         this.lng = lng;
     }
 
