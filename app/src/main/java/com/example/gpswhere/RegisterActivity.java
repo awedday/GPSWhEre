@@ -51,6 +51,8 @@ public class RegisterActivity extends AppCompatActivity {
     StorageReference storageReference;
     Uri resultUri;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +82,6 @@ public class RegisterActivity extends AppCompatActivity {
                     boolean check = !task.getResult().getSignInMethods().isEmpty();
                     if (!check) {
                         dialog.dismiss();
-                        Toast.makeText(getApplicationContext(), "Данная почта успешно зарегестрирована", Toast.LENGTH_SHORT).show();
                     } else {
                         dialog.dismiss();
                         Toast.makeText(getApplicationContext(), "Данная почта уже была зарегестрирована", Toast.LENGTH_SHORT).show();
@@ -89,51 +90,62 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        if(e3_password.getText().toString().length()<6) {
+        if(e3_password.getText().toString().length()>6) {
+
+
+        if(resultUri!=null) {
+
+            dialog.setMessage("Пожалуйста, подождите пока создается аккаунт");
+            dialog.show();
+
+            auth.createUserWithEmailAndPassword(e4_email.getText().toString(), e3_password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        //берем данные из реалтайм датабейз
+                        StorageReference storRef = FirebaseStorage.getInstance().getReference("profile")
+                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                .child("profile.jpg");
+
+                        storRef.putFile(resultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        storRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Uri> task) {
+                                                        storeData(task.getResult());
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.e("err2", e.getMessage());
+                                                    }
+                                                });
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.e("err1", "" + e.getMessage());
+                                    }
+                                });
+
+                    }
+
+                }
+            });
+        }
+        else{
+            Toast.makeText(getApplicationContext(),"Пожалуйста, выберите фотографию", Toast.LENGTH_SHORT).show();
+        }
+        }
+        else{
             Toast.makeText(getApplicationContext(), "Длина пароля должна быть больше 6 символов", Toast.LENGTH_SHORT).show();
         }
 
 
-        dialog.setMessage("Пожалуйста, подождите пока создается аккаунт");
-        dialog.show();
 
-        auth.createUserWithEmailAndPassword(e4_email.getText().toString(), e3_password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    //берем данные из реалтайм датабейз
-                    StorageReference storRef = FirebaseStorage.getInstance().getReference("profile")
-                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                            .child("profile.jpg");
-
-                    storRef.putFile(resultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    storRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Uri> task) {
-                                                    storeData(task.getResult());
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Log.e("err2", e.getMessage());
-                                                }
-                                            });
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.e("err1", ""+e.getMessage());
-                                }
-                            });
-
-                }
-
-            }
-        });
 
     }
 
@@ -152,12 +164,33 @@ public class RegisterActivity extends AppCompatActivity {
             circleImageView.setImageURI(resultUri);
         }
     }
+
+//    public void generateCode(View v){
+//        Date myDate = new Date();
+//        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a", Locale.getDefault());
+//        String date = format1.format(myDate);
+//        Random r = new Random();
+//
+//        int n = 100000 + r.nextInt(900000);
+//        code = String.valueOf(n);
+//
+//    }
     private void storeData(Uri uri){
+        Date myDate = new Date();
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a", Locale.getDefault());
+        String date = format1.format(myDate);
+        Random r = new Random();
+
+        int n = 100000 + r.nextInt(900000);
+         String code = String.valueOf(n);
+
         User newUser = new User();
 
+        newUser.setCode(code);
         newUser.setEmail(e4_email.getText().toString());
         newUser.setImageUrl(uri.toString());
         newUser.setIssharding(false);
+        newUser.setName(e5_name.getText().toString());
         newUser.setPassword(e3_password.getText().toString());
         FirebaseDatabase.getInstance().getReference("Users")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
@@ -170,6 +203,7 @@ public class RegisterActivity extends AppCompatActivity {
                         finish();
                     }
                 });
+
     }
 
 }
