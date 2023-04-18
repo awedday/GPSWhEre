@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -41,13 +42,14 @@ public class RegisterActivity extends AppCompatActivity {
     FirebaseAuth auth;
     EditText e3_password;
 
+
     Button buttonReg;
 
     EditText e5_name;
     CircleImageView circleImageView;
 
     DatabaseReference reference;
-
+    FirebaseUser user;
     StorageReference storageReference;
     Uri resultUri;
 
@@ -59,6 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         e4_email = (EditText)findViewById(R.id.editText4);
         auth = FirebaseAuth.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
         dialog = new ProgressDialog(this);
         e3_password =(EditText)findViewById(R.id.editText3);
         buttonReg =(Button)findViewById(R.id.buttonRegister);
@@ -198,9 +201,30 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(RegisterActivity.this, "Registration, then Image upload success", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(RegisterActivity.this, SideActivity.class));
+                        //Toast.makeText(RegisterActivity.this, "На почту было отправлено письмо для подтверждения", Toast.LENGTH_SHORT).show();
+                        sendVerificationEmail();
+                        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                         finish();
+                    }
+                });
+
+    }
+
+    public void sendVerificationEmail() {
+        user.sendEmailVerification()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful())
+                        {
+                            Toast.makeText(getApplicationContext(),"На почту было отправлено подтверждение", Toast.LENGTH_SHORT).show();
+                            finish();
+                            auth.signOut();
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(),"Не можем отправить письмо для подтверждения", Toast.LENGTH_SHORT).show();
+
+                        }
                     }
                 });
 

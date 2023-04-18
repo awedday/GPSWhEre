@@ -13,6 +13,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -34,10 +35,18 @@ public class LoginActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful())
                 {
-                    Toast.makeText(getApplicationContext(),"Пользователь успешно авторизовался", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(LoginActivity.this, SideActivity.class);
-                    startActivity(intent);
-                    finish();
+                    //Toast.makeText(getApplicationContext(),"Пользователь успешно авторизовался", Toast.LENGTH_LONG).show();
+                    FirebaseUser user = auth.getCurrentUser();
+                    if(user.isEmailVerified()){
+                        Intent intent = new Intent(LoginActivity.this, SideActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }else{
+                        Toast.makeText(getApplicationContext(),"Вы не подтвердили почту", Toast.LENGTH_LONG).show();
+
+                    }
+
+
                 }
                 else
                 {

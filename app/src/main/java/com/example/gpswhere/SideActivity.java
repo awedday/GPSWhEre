@@ -39,6 +39,8 @@ import com.yandex.mapkit.location.LocationStatus;
 import com.yandex.mapkit.map.CameraPosition;
 import com.yandex.mapkit.mapview.MapView;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class SideActivity extends AppCompatActivity {
 
 
@@ -57,7 +59,7 @@ public class SideActivity extends AppCompatActivity {
     String current_user_imageUrl;
 
     TextView textViewName, textViewCode;
-    ImageView imageViewImage;
+    CircleImageView imageViewImage;
 
 
     private static final String API_KEY = "86b62060-f681-42c8-bbf8-7010ad40d4a6";
