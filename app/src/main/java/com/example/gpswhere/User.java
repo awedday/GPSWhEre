@@ -6,12 +6,14 @@ public class User {
     private String email;
     private String imageUrl;
     private Boolean issharding;
-    private String lat;
-    private String lng;
+    private Double lat;
+    private Double lng;
     private String name;
     private String password;
 
-    public User(String code, String email, String imageUrl, Boolean issharding, String lat, String lng, String name, String password) {
+    private  String userId;
+
+    public User(String code, String email, String imageUrl, Boolean issharding, Double lat, Double lng, String name, String password,String userId) {
         this.code = code;
         this.email = email;
         this.imageUrl = imageUrl;
@@ -20,6 +22,15 @@ public class User {
         this.lng = lng;
         this.name = name;
         this.password = password;
+        this.userId = userId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public User() {
@@ -57,19 +68,19 @@ public class User {
         this.issharding = issharding;
     }
 
-    public String getLat() {
+    public Double getLat() {
         return lat;
     }
 
-    public void setLat(String lat) {
+    public void setLat(Double lat) {
         this.lat = lat;
     }
 
-    public String getLng() {
+    public Double getLng() {
         return lng;
     }
 
-    public void setLng(String lng) {
+    public void setLng(Double lng) {
         this.lng = lng;
     }
 

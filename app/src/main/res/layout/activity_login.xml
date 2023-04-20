@@ -13,6 +13,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="80dp"
         android:ems="10"
+        android:onClick="submitButtonClick"
         android:hint="Введите почту"
         android:inputType="textEmailAddress"
         android:layout_alignParentEnd="true"/>

@@ -12,6 +12,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -110,7 +114,7 @@ public class SideActivity extends AppCompatActivity {
                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("lng").setValue(myLocation.getLongitude());
                 FirebaseDatabase.getInstance().getReference("Users")
                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("lat").setValue(myLocation.getLatitude());
-
+                subscribeToLocationUpdate();
             }
 
             @Override
@@ -153,7 +157,9 @@ public class SideActivity extends AppCompatActivity {
                 }
                 else if (id == R.id.nav_joinCircle)
                 {
-
+                    Intent myIntent = new Intent(SideActivity.this,JoinCircleActivity.class);
+                    startActivity(myIntent);
+                    finish();
                 }
                 else if (id == R.id.nav_joinedCircle)
                 {

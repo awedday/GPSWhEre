@@ -193,10 +193,9 @@ public class RegisterActivity extends AppCompatActivity {
         newUser.setEmail(e4_email.getText().toString());
         newUser.setImageUrl(uri.toString());
         newUser.setIssharding(false);
-        newUser.setLat("");
-        newUser.setLng("");
         newUser.setName(e5_name.getText().toString());
         newUser.setPassword(e3_password.getText().toString());
+        newUser.setUserId(user.getUid());
         FirebaseDatabase.getInstance().getReference("Users")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .setValue(newUser)
