@@ -186,7 +186,9 @@ public class SideActivity extends AppCompatActivity {
                 }
                 else if (id == R.id.nav_myCircle)
                 {
-
+                    Intent myIntent = new Intent(SideActivity.this,MyCircleActivity.class);
+                    startActivity(myIntent);
+                    finish();
                 }
 
                 drawerLayout.closeDrawer(GravityCompat.START);
