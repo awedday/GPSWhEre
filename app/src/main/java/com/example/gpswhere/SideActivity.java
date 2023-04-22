@@ -16,6 +16,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -23,6 +24,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,6 +36,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.yandex.mapkit.Animation;
 import com.yandex.mapkit.MapKit;
@@ -223,6 +231,9 @@ public class SideActivity extends AppCompatActivity {
         mapView.onStop();
         MapKitFactory.getInstance().onStop();
         locationManager.unsubscribe(myLocationListener);
+        StorageReference storRef = FirebaseStorage.getInstance().getReference("profile")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(String.valueOf(R.drawable.red_offline));
         super.onStop();
     }
 
@@ -239,7 +250,7 @@ public class SideActivity extends AppCompatActivity {
         super.onStart();
         MapKitFactory.getInstance().onStart();
         mapView.onStart();
-
+//        Online();
         subscribeToLocationUpdate();
     }
 
@@ -264,4 +275,30 @@ public class SideActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+
+//    public void Online(){
+//        StorageReference storRef = FirebaseStorage.getInstance().getReference("profile")
+//                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+//                .child(String.valueOf(R.drawable.green_online));
+//        storRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Uri> task) {
+//                        storeData(task.getResult());
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.e("err2", e.getMessage());
+//                    }
+//                });
+//    }
+//
+//    private void storeData(Uri uri){
+//        User newUser = new User();
+//        newUser.setUserId(uri.toString());
+//        FirebaseDatabase.getInstance().getReference("Users")
+//                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).
+//                .setValue(newUser);
+//    }
 }

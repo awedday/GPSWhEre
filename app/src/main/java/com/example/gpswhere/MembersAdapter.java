@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,12 +48,14 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.MembersV
         User currentUserObj = nameList.get(position);
         holder.name_txt.setText(currentUserObj.getName());
         Picasso.get().load(currentUserObj.getImageUrl()).into(holder.circleImageView);
+        Picasso.get().load(currentUserObj.getStatusid()).into(holder.imageView);
 
     }
 
     public static class MembersViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView name_txt;
         CircleImageView circleImageView;
+        ImageView imageView;
 
         Context c;
         ArrayList<User> nameArrayList;
@@ -71,6 +74,7 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.MembersV
 
             name_txt = itemView.findViewById(R.id.item_title);
             circleImageView = itemView.findViewById(R.id.i11);
+            imageView = itemView.findViewById(R.id.statusId);
         }
 
         @Override

@@ -12,8 +12,9 @@ public class User {
     private String password;
 
     private  String userId;
+    private String statusid;
 
-    public User(String code, String email, String imageUrl, Boolean issharding, Double lat, Double lng, String name, String password,String userId) {
+    public User(String code, String email, String imageUrl, Boolean issharding, Double lat, Double lng, String name, String password,String userId,String statusid) {
         this.code = code;
         this.email = email;
         this.imageUrl = imageUrl;
@@ -23,6 +24,15 @@ public class User {
         this.name = name;
         this.password = password;
         this.userId = userId;
+        this.statusid = statusid;
+    }
+
+    public String getStatusid() {
+        return statusid;
+    }
+
+    public void setStatusid(String statusid) {
+        this.statusid = statusid;
     }
 
     public String getUserId() {

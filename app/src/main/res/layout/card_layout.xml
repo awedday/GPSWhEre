@@ -37,6 +37,7 @@
                 android:text="My User"
                 android:id="@+id/item_title"/>
             <ImageView
+                android:id="@+id/statusId"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"

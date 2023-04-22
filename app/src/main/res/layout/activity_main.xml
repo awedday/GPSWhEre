@@ -4,9 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:id="@+id/rootLayout"
+    android:background="@drawable/africa"
+    tools:context=".MainActivity"
+    >
 
-    <Button
+    <ImageView
+        android:layout_width="143dp"
+        android:layout_height="59dp"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/icon"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        />
+
+    <ImageButton
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,9 +27,11 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="16dp"
         android:onClick="goToRegister"
+        android:background="@drawable/buttonsignup"
+
         android:text="Регистрация" />
 
-    <Button
+    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/button2"
@@ -25,6 +39,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="16dp"
         android:onClick="goToLogin"
-        android:text="Вход" />
+        android:text="Вход"
+        android:background="@drawable/buttonsignin"/>
 
 </RelativeLayout>
