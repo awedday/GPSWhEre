@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToLogin(View v){
         Intent myIntent = new Intent(MainActivity.this, LoginActivity.class);
+        myIntent.putExtra("walls", Wallpaper);
         startActivity(myIntent);
     }
 

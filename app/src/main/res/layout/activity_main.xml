@@ -42,7 +42,7 @@
         android:onClick="goToLogin"
         android:textColor="@color/white"
         android:text="Вход"
-        
+
         android:background= "@color/buttonmainone"/>
 
 </RelativeLayout>

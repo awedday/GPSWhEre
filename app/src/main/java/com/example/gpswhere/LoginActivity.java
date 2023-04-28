@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,6 +22,8 @@ public class LoginActivity extends AppCompatActivity {
     EditText e1,e2;
     FirebaseAuth auth;
 
+    Button login;
+    int log;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +32,29 @@ public class LoginActivity extends AppCompatActivity {
         e1 = (EditText)findViewById(R.id.editText);
         e2 = (EditText)findViewById(R.id.editText2);
         auth = FirebaseAuth.getInstance();
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.rootLayout);
+        login = (Button)findViewById(R.id.login);
+        log = (int)getIntent().getExtras().get("walls");
+
+        switch (log){
+            case 1:
+                relativeLayout.setBackgroundResource(R.drawable.wallspaperlogregfive);
+                login.setBackgroundColor(getResources().getColor(R.color.buttonmainfive, null));
+                break;
+            case 2:
+                relativeLayout.setBackgroundResource(R.drawable.wallspaperlogregtwo);
+                login.setBackgroundColor(getResources().getColor(R.color.buttonmaintwo, null));
+                break;
+            case 3:
+                relativeLayout.setBackgroundResource(R.drawable.wallspaperlogregthree);
+                login.setBackgroundColor(getResources().getColor(R.color.buttonmainthree, null));
+                break;
+            case 4:
+                relativeLayout.setBackgroundResource(R.drawable.wallspaperlogregfour);
+                login.setBackgroundColor(getResources().getColor(R.color.buttonmainfour, null));
+                break;
+
+        }
     }
     public void login(View v){
         auth.signInWithEmailAndPassword(e1.getText().toString(),e2.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
