@@ -9,4 +9,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="mainact">#9945EE</color>
     <color name="buttonlogin">#D4B07D</color>
+    <color name="buttonmainone">#00861D</color>
+    <color name="buttonmaintwo">#1B9781</color>
+    <color name="buttonmainthree">#B96767</color>
+    <color name="buttonmainfour">#C77802</color>
+    <color name="buttonmainfive">#918676</color>
 </resources>
