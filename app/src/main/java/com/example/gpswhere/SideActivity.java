@@ -162,7 +162,7 @@ public class SideActivity extends AppCompatActivity {
                 .setContentTitle("ТВОИ ДРУЗЬЯ РЯДОМ")
                 .setContentText("Не хочешь прогуляться сегодня?")
                 .setContentIntent(pendingIntent)
-                
+
                 .setAutoCancel(true);
         notification = builder.build();
         notificationManagerCompat = NotificationManagerCompat.from(this);
@@ -265,9 +265,11 @@ public class SideActivity extends AppCompatActivity {
                     startActivity(myIntent);
                     finish();
                 }
-                else if (id == R.id.nav_joinedCircle)
+                else if (id == R.id.nav_changeAvatar)
                 {
-
+                    Intent myIntent = new Intent(SideActivity.this,ChangeAvatarActivity.class);
+                    startActivity(myIntent);
+                    finish();
                 }
                 else if (id == R.id.nav_shareLoc)
                 {

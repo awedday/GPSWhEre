@@ -3,18 +3,18 @@
 
     <item
         android:id="@+id/nav_joinCircle"
-        android:title="join Circle"/>
+        android:title="Добавиться к группе"/>
     <item
         android:id="@+id/nav_myCircle"
-        android:title="myCircle"/>
+        android:title="Моя группа"/>
 
     <item
-        android:id="@+id/nav_joinedCircle"
-        android:title="joinedCircle"/>
+        android:id="@+id/nav_changeAvatar"
+        android:title="Поменять аватарку"/>
 
     <item
         android:id="@+id/nav_inviteMembers"
-        android:title="invite Members"/>
+        android:title="Позвать друзей"/>
 
     <item
         android:id="@+id/nav_shareLoc"
