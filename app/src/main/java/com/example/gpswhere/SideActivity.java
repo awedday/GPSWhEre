@@ -6,12 +6,15 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -23,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -44,6 +48,7 @@ import com.yandex.mapkit.Animation;
 import com.yandex.mapkit.MapKit;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
+import com.yandex.mapkit.geometry.Polyline;
 import com.yandex.mapkit.layers.GeoObjectTapEvent;
 import com.yandex.mapkit.layers.GeoObjectTapListener;
 import com.yandex.mapkit.location.FilteringMode;
@@ -53,6 +58,9 @@ import com.yandex.mapkit.location.LocationManager;
 import com.yandex.mapkit.location.LocationStatus;
 import com.yandex.mapkit.map.CameraPosition;
 import com.yandex.mapkit.mapview.MapView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -64,6 +72,7 @@ public class SideActivity extends AppCompatActivity {
     Toolbar toolbar;
     FirebaseAuth auth;
     FirebaseUser user;
+    private static final int PERMISSIONS_REQUEST_FINE_LOCATION = 1;
 
     private MapKit mapKit;
     MapView mapView;
@@ -79,7 +88,7 @@ public class SideActivity extends AppCompatActivity {
     private LocationListener myLocationListener;
     private Point myLocation;
 
-    DatabaseReference databaseReference;
+    DatabaseReference databaseReference, reference;
 
     String current_user_name;
     String current_user_code;
@@ -87,7 +96,13 @@ public class SideActivity extends AppCompatActivity {
 
     TextView textViewName, textViewCode;
     CircleImageView imageViewImage;
+    private  List<Point> lst1;
+    User  createUser;
 
+    ArrayList<User> nameList;
+    String circleMemberiId;
+    Double Lat, Lng;
+    private Point TARGET_LOCATION;
 
     private static final String MAPKIT_API_KEY = "86b62060-f681-42c8-bbf8-7010ad40d4a6";
     @Override
@@ -110,28 +125,33 @@ public class SideActivity extends AppCompatActivity {
         textViewCode = header.findViewById(R.id.textViewCode);
         imageViewImage = header.findViewById(R.id.imageViewPhoto);
         locationManager = MapKitFactory.getInstance().createLocationManager();
-        myLocationListener = new LocationListener() {
+        lst1 = new ArrayList<>();
+        nameList = new ArrayList<>();
+        reference = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).child("CircleMembers");
+
+        mapKit.createLocationManager().requestSingleUpdate(new LocationListener() {
             @Override
-            public void onLocationUpdated(Location location) {
-                if (myLocation == null) {
-                    moveCamera(location.getPosition(), COMFORTABLE_ZOOM_LEVEL);
-                }
-                myLocation = location.getPosition(); //this user point
-                Log.w(TAG, "my location - " + myLocation.getLatitude() + "," + myLocation.getLongitude());
+            public void onLocationUpdated(@NonNull Location location) {
+                mapView.getMap().move(
+                        new CameraPosition(location.getPosition(), 18.0f, 0.0f, 0.0f),
+                        new Animation(Animation.Type.SMOOTH, 2),
+                        null);
+                Point pp = location.getPosition();
+                lst1.add(pp);
+                mapView.getMap().getMapObjects().addPlacemark(location.getPosition());
                 FirebaseDatabase.getInstance().getReference("Users")
-                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("lng").setValue(myLocation.getLongitude());
+                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("lng").setValue(pp.getLongitude());
                 FirebaseDatabase.getInstance().getReference("Users")
-                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("lat").setValue(myLocation.getLatitude());
+                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("lat").setValue(pp.getLatitude());
                 subscribeToLocationUpdate();
             }
 
             @Override
-            public void onLocationStatusUpdated(LocationStatus locationStatus) {
-                if (locationStatus == LocationStatus.NOT_AVAILABLE) {
-                    System.out.println("sdncvoadsjv");
-                }
+            public void onLocationStatusUpdated(@NonNull LocationStatus locationStatus) {
+
             }
-        };
+        });
+
 
         setSupportActionBar(toolbar);
 
@@ -143,6 +163,44 @@ public class SideActivity extends AppCompatActivity {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.OpenDrawer, R.string.CloseDrawer);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                nameList.clear();
+                if(snapshot.exists()){
+                    for (DataSnapshot dss: snapshot.getChildren()){
+                        circleMemberiId = dss.child("circleMemberId").getValue(String.class);
+                        databaseReference.child(circleMemberiId)
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        createUser = snapshot.getValue(User.class);
+                                        nameList.add(createUser);
+                                        Lat = createUser.getLat();
+                                        Lng = createUser.getLng();
+                                        TARGET_LOCATION = new Point(Lat,Lng);
+                                        lst1.add(TARGET_LOCATION);
+                                        mapView.getMap().getMapObjects().addPlacemark(TARGET_LOCATION);
+                                        mapView.getMap().getMapObjects().addPolyline(new Polyline(lst1));
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+                                        Toast.makeText(getApplicationContext(),DatabaseError.OPERATION_FAILED, Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -225,15 +283,14 @@ public class SideActivity extends AppCompatActivity {
             }
         });
 
+
     }
     @Override
     protected void onStop() {
         mapView.onStop();
         MapKitFactory.getInstance().onStop();
         locationManager.unsubscribe(myLocationListener);
-        StorageReference storRef = FirebaseStorage.getInstance().getReference("profile")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child(String.valueOf(R.drawable.red_offline));
+
         super.onStop();
     }
 
@@ -250,7 +307,6 @@ public class SideActivity extends AppCompatActivity {
         super.onStart();
         MapKitFactory.getInstance().onStart();
         mapView.onStart();
-//        Online();
         subscribeToLocationUpdate();
     }
 
@@ -276,29 +332,5 @@ public class SideActivity extends AppCompatActivity {
         }
     }
 
-//    public void Online(){
-//        StorageReference storRef = FirebaseStorage.getInstance().getReference("profile")
-//                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-//                .child(String.valueOf(R.drawable.green_online));
-//        storRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Uri> task) {
-//                        storeData(task.getResult());
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.e("err2", e.getMessage());
-//                    }
-//                });
-//    }
-//
-//    private void storeData(Uri uri){
-//        User newUser = new User();
-//        newUser.setUserId(uri.toString());
-//        FirebaseDatabase.getInstance().getReference("Users")
-//                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).
-//                .setValue(newUser);
-//    }
+
 }
