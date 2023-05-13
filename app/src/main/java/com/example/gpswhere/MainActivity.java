@@ -70,9 +70,9 @@ public class MainActivity extends AppCompatActivity {
             setContentView(R.layout.activity_main);
         }
         else{
-//            Intent myIntent = new Intent(MainActivity.this,SideActivity.class);
-//            startActivity(myIntent);
-//            finish();
+            Intent myIntent = new Intent(MainActivity.this,SideActivity.class);
+            startActivity(myIntent);
+            finish();
         }
 
 

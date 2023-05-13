@@ -7,19 +7,28 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -58,8 +67,10 @@ import com.yandex.mapkit.location.LocationManager;
 import com.yandex.mapkit.location.LocationStatus;
 import com.yandex.mapkit.map.CameraPosition;
 import com.yandex.mapkit.mapview.MapView;
+import com.yandex.runtime.image.ImageProvider;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -96,15 +107,20 @@ public class SideActivity extends AppCompatActivity {
 
     TextView textViewName, textViewCode;
     CircleImageView imageViewImage;
-    private  List<Point> lst1;
-    User  createUser;
+    private List<Point> lst1;
+    User createUser;
 
     ArrayList<User> nameList;
     String circleMemberiId;
     Double Lat, Lng;
     private Point TARGET_LOCATION;
 
+   NotificationManagerCompat notificationManagerCompat;
+   Notification notification;
+
     private static final String MAPKIT_API_KEY = "86b62060-f681-42c8-bbf8-7010ad40d4a6";
+
+    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,6 +145,28 @@ public class SideActivity extends AppCompatActivity {
         nameList = new ArrayList<>();
         reference = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).child("CircleMembers");
 
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel channel = new NotificationChannel("myCh", "My Channel", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+
+        Intent intent = new Intent(this, SideActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "myCh")
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icongornotification))
+                .setSmallIcon(R.drawable.iconsmall)
+                .setContentTitle("ТВОИ ДРУЗЬЯ РЯДОМ")
+                .setContentText("Не хочешь прогуляться сегодня?")
+                .setContentIntent(pendingIntent)
+                
+                .setAutoCancel(true);
+        notification = builder.build();
+        notificationManagerCompat = NotificationManagerCompat.from(this);
+        notificationManagerCompat.notify(1, notification);
         mapKit.createLocationManager().requestSingleUpdate(new LocationListener() {
             @Override
             public void onLocationUpdated(@NonNull Location location) {
@@ -331,6 +369,5 @@ public class SideActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
-
 
 }
