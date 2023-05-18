@@ -1,14 +1,19 @@
 package com.example.gpswhere;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowInsets;
 import android.widget.Button;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,7 +39,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ChangeAvatarActivity extends AppCompatActivity {
     CircleImageView circleImageView;
     Uri resultUri;
-    Button changeAvatar;
+    Button changeAvatar, back;
     StorageReference storageReference, newPhoto;
     DatabaseReference reference;
     FirebaseUser user;
@@ -50,43 +55,53 @@ public class ChangeAvatarActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference().child("Users");
         storageReference = FirebaseStorage.getInstance().getReference().child("User_images");
+        back = findViewById(R.id.backchangeAvatar);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(ChangeAvatarActivity.this,SideActivity.class);
+                startActivity(myIntent);
+            }
+        });
     }
 
+
+
     public void ChangeAvatar(View v) {
-     if(resultUri!=null) {
-                    StorageReference storRef = FirebaseStorage.getInstance().getReference("profile")
-                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                            .child("profile.jpg");
+        if(resultUri!=null) {
+            StorageReference storRef = FirebaseStorage.getInstance().getReference("profile")
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .child("profile.jpg");
 
-                    storRef.putFile(resultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    storRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Uri> task) {
-                                                    storeData(task.getResult());
-                                                    
-                                                        Intent myIntent = new Intent(ChangeAvatarActivity.this, SideActivity.class);
-                                                        startActivity(myIntent);
+            storRef.putFile(resultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            storRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Uri> task) {
+                                            storeData(task.getResult());
 
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Log.e("err2", e.getMessage());
-                                                }
-                                            });
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.e("err1", "" + e.getMessage());
-                                }
-                            });
+//                                                        Intent myIntent = new Intent(ChangeAvatarActivity.this, SideActivity.class);
+//                                                        startActivity(myIntent);
 
-                    }
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.e("err2", e.getMessage());
+                                        }
+                                    });
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e("err1", "" + e.getMessage());
+                        }
+                    });
+
+        }
 
     }
 

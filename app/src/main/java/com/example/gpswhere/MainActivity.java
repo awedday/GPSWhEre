@@ -70,9 +70,9 @@ public class MainActivity extends AppCompatActivity {
             setContentView(R.layout.activity_main);
         }
         else{
-            Intent myIntent = new Intent(MainActivity.this,SideActivity.class);
-            startActivity(myIntent);
-            finish();
+//            Intent myIntent = new Intent(MainActivity.this,SideActivity.class);
+//            startActivity(myIntent);
+//            finish();
         }
 
 
@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToRegister(View v){
         Intent myIntent = new Intent(MainActivity.this, RegisterActivity.class);
+        myIntent.putExtra("walls", Wallpaper);
         startActivity(myIntent);
     }
 }

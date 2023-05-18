@@ -18,7 +18,7 @@
 
     <item
         android:id="@+id/nav_shareLoc"
-        android:title="Где я?"/>
+        android:title="Помощь"/>
 
     <item
         android:id="@+id/nav_signOut"

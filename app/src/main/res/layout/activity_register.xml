@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/rootLayout"
     android:layout_height="match_parent"
+    android:background="@drawable/wallspaperlogregone"
     tools:context=".RegisterActivity">
 
     <EditText
@@ -18,7 +20,9 @@
         android:layout_marginEnd="2dp"
         android:ems="10"
         android:hint="Введите почту"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/black" />
 
     <EditText
         android:id="@+id/editText3"
@@ -32,7 +36,9 @@
         android:layout_marginEnd="1dp"
         android:ems="10"
         android:hint="Введите пароль"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/black"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/circleImageView"
@@ -53,15 +59,19 @@
         android:layout_marginTop="30dp"
         android:ems="10"
         android:hint="Введите свое имя"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/black"/>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/buttonRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/circleImageView"
         android:layout_centerVertical="true"
         android:onClick="Registration"
-        android:text="Регистрация" />
+        android:text="Регистрация"
+        android:textColor="@color/white"
+        android:background= "@color/buttonmainone"/>
 
 </RelativeLayout>
