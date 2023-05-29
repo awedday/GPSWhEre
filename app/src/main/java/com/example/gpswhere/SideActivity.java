@@ -100,7 +100,7 @@ public class SideActivity extends AppCompatActivity {
     private static final boolean USE_IN_BACKGROUND = false;
     public static final int COMFORTABLE_ZOOM_LEVEL = 18;
 
-    private static final String message = "Я уже давно пользуюсь приложением 'WhEre'. Подключайся к нам! Я тебя жду.";
+    private static final String message = "Я уже давно пользуюсь приложением 'WhEre'. Подключайся к нам! Я тебя жду. https://drive.google.com/drive/u/0/folders/10n04ZNtEmMfZSOnMgyZohbODdZsKrmXh";
     private LocationManager locationManager;
     private LocationListener myLocationListener;
     private Point myLocation;
@@ -126,11 +126,14 @@ public class SideActivity extends AppCompatActivity {
 
     private static final String MAPKIT_API_KEY = "86b62060-f681-42c8-bbf8-7010ad40d4a6";
 
+
+
+
     @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MapKitFactory.setApiKey(MAPKIT_API_KEY);
+
         MapKitFactory.initialize(this);
         setContentView(R.layout.activity_side);
 

@@ -3,6 +3,7 @@ package com.example.gpswhere;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -43,6 +44,14 @@ public class JoinCircleActivity extends AppCompatActivity {
         current_user_id = user.getUid();
 
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, SideActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
 
     public  void submitButtonClick(View v){
 

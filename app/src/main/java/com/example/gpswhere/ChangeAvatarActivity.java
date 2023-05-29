@@ -105,6 +105,14 @@ public class ChangeAvatarActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, SideActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     public void selectImage(View v){
         Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         i.setType("image/*");
