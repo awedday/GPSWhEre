@@ -23,32 +23,72 @@
         app:layout_constraintVertical_bias="0.043" />
 
     <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="       Если возникны вопросы, пожалуйста, напишите на почту разработчика"
-        android:textSize="20dp"
         android:gravity="center"
+        android:text="       Если возникны вопросы, пожалуйста, напишите на почту разработчика"
+        android:textColor="@color/black"
+        android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.176"
-        android:textColor="@color/black"/>
+        app:layout_constraintVertical_bias="0.176" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/tvSendTo"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="    isip_a.p.benzenko"
+        android:text="isip_a.p.benzenko@mpt.ru"
         android:textColor="@color/black"
-        android:textSize="30dp"
-        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintVertical_bias="0.038"
+        tools:layout_editor_absoluteX="-25dp"
+        android:gravity="center"/>
+
+    <EditText
+        android:id="@+id/etSubject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Тема письма"
+        android:inputType="textEmailSubject"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintVertical_bias="0.103"
+        tools:layout_editor_absoluteX="-2dp" />
+
+    <EditText
+        android:id="@+id/etBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Содержание"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etSubject"
+        app:layout_constraintVertical_bias="0.113"
+        tools:layout_editor_absoluteX="1dp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/sendEmail"
+        android:layout_width="180dp"
+        android:layout_height="40dp"
+
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:background="@color/buttonmainfive"
+
+        android:text="Отправить письмо"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.365" />
+        app:layout_constraintTop_toBottomOf="@+id/etBody"
+        app:layout_constraintVertical_bias="0.288" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
