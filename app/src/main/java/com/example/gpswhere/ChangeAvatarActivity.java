@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowInsets;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -55,14 +56,7 @@ public class ChangeAvatarActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference().child("Users");
         storageReference = FirebaseStorage.getInstance().getReference().child("User_images");
-        back = findViewById(R.id.backchangeAvatar);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(ChangeAvatarActivity.this,SideActivity.class);
-                startActivity(myIntent);
-            }
-        });
+
     }
 
 
@@ -80,7 +74,7 @@ public class ChangeAvatarActivity extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Uri> task) {
                                             storeData(task.getResult());
-
+                                            Toast.makeText(ChangeAvatarActivity.this, "Перезапустите приложение, пожалуйста", Toast.LENGTH_SHORT).show();
 //                                                        Intent myIntent = new Intent(ChangeAvatarActivity.this, SideActivity.class);
 //                                                        startActivity(myIntent);
 

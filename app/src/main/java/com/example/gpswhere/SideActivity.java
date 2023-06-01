@@ -95,8 +95,8 @@ public class SideActivity extends AppCompatActivity {
     MapView mapView;
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final double DESIRED_ACCURACY = 0;
-    private static final long MINIMAL_TIME = 1000;
-    private static final double MINIMAL_DISTANCE = 1;
+    private static final long MINIMAL_TIME = 600000;
+    private static final double MINIMAL_DISTANCE = 100000;
     private static final boolean USE_IN_BACKGROUND = false;
     public static final int COMFORTABLE_ZOOM_LEVEL = 18;
 
@@ -344,13 +344,13 @@ public class SideActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    public void onFabCurrentLocationClick(View view) {
-        if (myLocation == null) {
-            return;
-        }
-
-        moveCamera(myLocation, COMFORTABLE_ZOOM_LEVEL);
-    }
+//    public void onFabCurrentLocationClick(View view) {
+//        if (mapKit == null) {
+//            return;
+//        }
+//
+//        moveCamera(mapView, COMFORTABLE_ZOOM_LEVEL);
+//    }
 
     @Override
     protected void onStart() {
